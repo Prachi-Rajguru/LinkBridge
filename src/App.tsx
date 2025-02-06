@@ -1,11 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
+import Feed from './pages/Feed';
+import Network from './pages/Network';
+import Jobs from './pages/Jobs';
 import Courses from './pages/Courses';
 import Profile from './pages/Profile';
-import Jobs from './pages/Jobs';
-import Network from './pages/Network';
-import Feed from './pages/Feed';
 
 function App() {
   return (
