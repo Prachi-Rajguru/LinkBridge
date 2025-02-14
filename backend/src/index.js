@@ -3,16 +3,19 @@ const cors = require('cors')
 const Auth = require('./routes/auth')
 const mongoose = require('mongoose')
 const Working = require('./routes/working');
+const Post = require('./routes/post')
+
 
 const app = express();
 
 app.use(express.json())
 app.use(cors())
 
-app.use('/auth', Auth)
+app.use('/auth', Auth.router)
 app.use('/working', Working)
+app.use('/post', Post.router)
 
-mongoose.connect('mongodb://localhost:27017/', { dbName: "course_selling_application" });
+mongoose.connect('mongodb+srv://aniketwarule775:CdJ1lRci5YIBItYZ@cluster0.szgy81i.mongodb.net/', { dbName: "course_selling_application" });
 
 
 app.listen(3000, (req, res) => {

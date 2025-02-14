@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { User, Lock, LogIn } from 'lucide-react';
+import axios from 'axios';
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         // Handle login logic here
         console.log('Login attempted with:', { username, password });
+        const res = await axios.post('http://localhost:3000/auth/login', {
+            username,
+            password,
+        });
+        console.log(res.data);
     };
 
     return (
