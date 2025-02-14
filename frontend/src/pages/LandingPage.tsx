@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Link2, Users, TrendingUp, Building2, Sparkles, Code, Briefcase } from 'lucide-react';
+import { Users, TrendingUp, Building2, Sparkles, Code, Briefcase } from 'lucide-react';
 
 const LandingPage = () => {
   const navigate = useNavigate();
