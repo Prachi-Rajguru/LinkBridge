@@ -36,19 +36,58 @@ const Profile = () => {
     loadProfile();
   }, []);
 
-  const handleAddEducation = () => {
+  const handleAddEducation = async () => {
     if (newEducation.degree && newEducation.school && newEducation.year) {
       setEducation([...education, newEducation]);
       setNewEducation({ degree: '', school: '', year: '' });
       setShowEduForm(false);
+
+      const newEducation = {
+        degree: newEducation.degree,
+        school: newEducation.school,
+        year: newEducation.year,
+      };
+      const response = await axios.post(`http://localhost:3000/working/addEducation`, {
+        username: user.userName,
+        education: newEducation,
+      }, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      });
+      if (response.data) {
+        console.log(response.data);
+      } else {
+        console.log('Education not added');
+      }
     }
   };
 
-  const handleAddExperience = () => {
+  const handleAddExperience = async () => {
     if (newExperience.title && newExperience.company && newExperience.from && newExperience.to) {
       setExperience([...experience, newExperience]);
       setNewExperience({ title: '', company: '', from: '', to: '' });
       setShowExpForm(false);
+
+      const newExperience = {
+        title: newExperience.title,
+        company: newExperience.company,
+        from: newExperience.from,
+        to: newExperience.to,
+      };
+      const response = await axios.post(`http://localhost:3000/working/addExperience`, {
+        username: user.userName,
+        experience: newExperience,
+      }, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      });
+      if (response.data) {
+        console.log(response.data);
+      } else {
+        console.log('Experience not added');
+      }
     }
   };
 
