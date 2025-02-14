@@ -43,7 +43,7 @@ function InitUser() {
 
   const init = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/auth/me`, {
+      const response = await axios.get(`https://linkbridge-apjk.onrender.com/auth/me`, {
         headers: {
           Authorization: localStorage.getItem("token"),
         },

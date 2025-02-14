@@ -16,7 +16,7 @@ function Login() {
         // Handle login logic here
         console.log('Login attempted with:', { username, password });
 
-        const res = await axios.post(`http://localhost:3000/auth/login`, {
+        const res = await axios.post(`https://linkbridge-apjk.onrender.com/auth/login`, {
             username,
             password,
         });
@@ -28,7 +28,7 @@ function Login() {
                 isLoading: false,
             })
             localStorage.setItem("token", "Bearer " + res.data.token);
-            navigate('/');
+            navigate('/dashboard');
         } else {
             console.log('Login failed');
             alert('Invalid username or password');

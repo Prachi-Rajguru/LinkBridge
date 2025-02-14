@@ -41,7 +41,7 @@ const Profile = () => {
 
   const loadProfile = async () => {
     try {
-      const response = await axios.get<ProfileResponse>('http://localhost:3000/working/getUser', {
+      const response = await axios.get<ProfileResponse>('https://linkbridge-apjk.onrender.com/working/getUser', {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
@@ -62,7 +62,7 @@ const Profile = () => {
   const handleAddEducation = async () => {
     if (newEducation.degree && newEducation.school && newEducation.year) {
       try {
-        const response = await axios.post('http://localhost:3000/working/addEducation', {
+        const response = await axios.post('https://linkbridge-apjk.onrender.com/working/addEducation', {
           username: user.userName,
           education: JSON.stringify(newEducation),
         }, {
@@ -88,7 +88,7 @@ const Profile = () => {
   const handleAddExperience = async () => {
     if (newExperience.title && newExperience.company && newExperience.from && newExperience.to) {
       try {
-        const response = await axios.post('http://localhost:3000/working/addExperience', {
+        const response = await axios.post('https://linkbridge-apjk.onrender.com/working/addExperience', {
           username: user.userName,
           experience: JSON.stringify(newExperience),
         }, {
