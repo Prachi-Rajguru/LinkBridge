@@ -1,20 +1,18 @@
 const express = require("express");
-const user = require("../db/db");
+const User = require("../db/db").user;
 const router = express.Router();
-const VERIFYWITHJWT = require("./auth");
+const middleware = require("./auth");
 
 
-router.get('/getUser', async (req, res) => {
-    const user = await user.findOne({ username: req.headers["user"] });
-    if (!user) {
+router.get('/getUser', middleware.VERIFYWITHJWT, async (req, res) => {
+    const userdata = await User.findOne({ username: req.headers["user"] });
+    if (!userdata) {
       res.status(403).json({ msg: "User doesnt exist" })
       return
     }
     res.json({
-      username: user.username
+      username: userdata.username
     })
 });
-    
-
 
 module.exports = router;

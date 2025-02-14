@@ -1,14 +1,38 @@
 import React, { useState } from 'react';
 import { User, Lock, LogIn } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useSetRecoilState } from 'recoil';
+import { userState } from '../store/atoms/user';
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const setUser = useSetRecoilState(userState) 
+    const navigate = useNavigate()
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault();
         // Handle login logic here
         console.log('Login attempted with:', { username, password });
+
+        const res = await axios.post(`http://localhost:3000/auth/login`, {
+            username,
+            password,
+        });
+
+        if (res.status === 200) {
+            console.log('Login successful');
+            setUser({
+                userName: username,
+                isLoading: false,
+            })
+            localStorage.setItem("token", "Bearer " + res.data.token);
+            navigate('/');
+        } else {
+            console.log('Login failed');
+            alert('Invalid username or password');
+        }
     };
 
     return (
@@ -89,7 +113,9 @@ function Login() {
 
             <div className="text-center text-sm">
                 <span className="text-gray-500">Don't have an account?</span>{' '}
-                <button className="font-medium text-indigo-600 hover:text-indigo-500">
+                <button onClick={() => {
+                    navigate('/register')
+                }} className="font-medium text-indigo-600 hover:text-indigo-500">
                     Sign up
                 </button>
             </div>

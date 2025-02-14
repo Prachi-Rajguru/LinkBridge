@@ -4,10 +4,12 @@ import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import { userState } from '../store/atoms/user';
 import { useNavigate } from 'react-router-dom';
+import { MdEmail } from 'react-icons/md';
 
 function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
     const setUser = useSetRecoilState(userState);
     const navigate = useNavigate();
 
@@ -17,6 +19,7 @@ function Register() {
         const response = await axios.post(`http://localhost:3000/auth/register`, {
             username: username,
             password: password,
+            email: email,
         });
 
         if (response.data.token) {
@@ -59,6 +62,26 @@ function Register() {
                             onChange={(e) => setUsername(e.target.value)}
                             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="Enter your username"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div className="space-y-2">
+                    <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                        Email
+                    </label>
+                    <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <MdEmail className="h-5 w-5 text-gray-400" />
+                        </div>
+                        <input
+                            id="username"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="Enter your email"
                             required
                         />
                     </div>

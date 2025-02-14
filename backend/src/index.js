@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json())
 app.use(cors())
 
-app.use('/auth', Auth)
+app.use('/auth', Auth.router)
 app.use('/working', Working)
 
 mongoose.connect('mongodb://localhost:27017/', { dbName: "course_selling_application" });
