@@ -38,11 +38,16 @@ router.get('/me', VERIFYWITHJWT, async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body
+    // console.log(username, password)
     if (!username || !password) {
         return res.status(400).json({ message: 'username and password are required' })
     }
     try {
-        const user = await User.findOne({ username })
+        const user = await User.findOne({
+            username: username,
+            password: password,
+        })
+        // console.log(user)
         if (!user) {
             return res.status(401).json({ message: 'Invalid username or password' })
         }

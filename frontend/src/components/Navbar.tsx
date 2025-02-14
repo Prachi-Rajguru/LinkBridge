@@ -16,11 +16,11 @@ const Navbar = () => {
       <nav className="bg-white shadow-md">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-16">
-            <Link to="/" className="text-2xl font-bold text-dark">
+            <Link to="/dashboard" className="text-2xl font-bold text-dark">
               LinkBridge
             </Link>
             <div className="flex space-x-6">
-              <Link to="/" className="flex flex-col items-center text-gray-600 hover:text-dark">
+              <Link to="/dashboard" className="flex flex-col items-center text-gray-600 hover:text-dark">
                 <FaHome className="text-xl" />
                 <span className="text-xs">Home</span>
               </Link>
@@ -67,12 +67,7 @@ const Navbar = () => {
         </div>
       </nav>
     );
-  }
-
-  
-
-
-  
+  }  
 }
 
 export default Navbar

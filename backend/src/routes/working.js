@@ -11,7 +11,7 @@ router.get('/getUser', middleware.VERIFYWITHJWT, async (req, res) => {
       return
     }
     res.json({
-      username: userdata.username
+      userdata
     })
 });
 
@@ -22,10 +22,10 @@ router.get('/getUser', middleware.VERIFYWITHJWT, async (req, res) => {
 //   experience: [String],
 //   education: [String],
 // });
-router.post('/addexperience', middleware.VERIFYWITHJWT, async (req, res) => {
+router.post('/addExperience', middleware.VERIFYWITHJWT, async (req, res) => {
     try {
-        const { username } = req.headers["user"];
-        const {  experience } = req.body;
+        // const { username } = req.headers["user"];
+        const {  username, experience } = req.body;
         if (!username || !experience) {
             return res.status(400).json({ message: "username and experience are required" });
         }
@@ -33,7 +33,7 @@ router.post('/addexperience', middleware.VERIFYWITHJWT, async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        user.experience.push(experience);
+        user.experience.push(JSON.parse(experience));
         await user.save();
         res.status(200).json({ message: "Experience added successfully" });
     } catch (error) {
@@ -42,10 +42,11 @@ router.post('/addexperience', middleware.VERIFYWITHJWT, async (req, res) => {
     }
 });
 
-router.post('/addeducation', middleware.VERIFYWITHJWT, async (req, res) => {
+router.post('/addEducation', middleware.VERIFYWITHJWT, async (req, res) => {
     try {
-        const { username } = req.headers["user"];
-        const {  education } = req.body;
+        // const { username } = req.headers["user"];
+        const { username, education } = req.body;
+        console.log(username, education);
         if (!username || !education) {
             return res.status(400).json({ message: "username and education are required" });
         }
@@ -53,7 +54,7 @@ router.post('/addeducation', middleware.VERIFYWITHJWT, async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        user.education.push(education);
+        user.education.push(JSON.parse(education));
         await user.save();
         res.status(200).json({ message: "Education added successfully" });
     } catch (error) {

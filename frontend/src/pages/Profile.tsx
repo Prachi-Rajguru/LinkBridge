@@ -5,89 +5,109 @@ import { useRecoilValue } from 'recoil';
 import { userState } from '../store/atoms/user';
 import { Plus } from 'lucide-react';
 
+interface Education {
+  degree: string;
+  school: string;
+  year: string;
+}
+
+interface Experience {
+  title: string;
+  company: string;
+  from: string;
+  to: string;
+}
+
+interface User {
+  userName: string;
+  isLoading: boolean;
+}
+
+interface ProfileResponse {
+  userdata: {
+    education: Education[];
+    experience: Experience[];
+  };
+}
+
 const Profile = () => {
-  const user = useRecoilValue(userState);
-  const [education, setEducation] = useState([]);
-  const [experience, setExperience] = useState([]);
+  const user = useRecoilValue<User>(userState);
+  const [education, setEducation] = useState<Education[]>([]);
+  const [experience, setExperience] = useState<Experience[]>([]);
   const [showEduForm, setShowEduForm] = useState(false);
   const [showExpForm, setShowExpForm] = useState(false);
-  const [newEducation, setNewEducation] = useState({ degree: '', school: '', year: '' });
-  const [newExperience, setNewExperience] = useState({ title: '', company: '', from: '', to: '' });
+  const [newEducation, setNewEducation] = useState<Education>({ degree: '', school: '', year: '' });
+  const [newExperience, setNewExperience] = useState<Experience>({ title: '', company: '', from: '', to: '' });
 
   const loadProfile = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/working/getUser`, {
+      const response = await axios.get<ProfileResponse>('http://localhost:3000/working/getUser', {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
       });
       if (response.data) {
-        console.log(response.data);
-      } else {
-        console.log('Profile not found');
+        setEducation(response.data.userdata.education);
+        setExperience(response.data.userdata.experience);
       }
     } catch (e) {
-      console.log('Profile not found');
+      console.error('Failed to load profile:', e);
     }
   };
 
   useEffect(() => {
-    console.log('Profile page loaded');
     loadProfile();
   }, []);
 
   const handleAddEducation = async () => {
     if (newEducation.degree && newEducation.school && newEducation.year) {
-      setEducation([...education, newEducation]);
-      setNewEducation({ degree: '', school: '', year: '' });
-      setShowEduForm(false);
-
-      const newEducation = {
-        degree: newEducation.degree,
-        school: newEducation.school,
-        year: newEducation.year,
-      };
-      const response = await axios.post(`http://localhost:3000/working/addEducation`, {
-        username: user.userName,
-        education: newEducation,
-      }, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      });
-      if (response.data) {
-        console.log(response.data);
-      } else {
-        console.log('Education not added');
+      try {
+        const response = await axios.post('http://localhost:3000/working/addEducation', {
+          username: user.userName,
+          education: JSON.stringify(newEducation),
+        }, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        });
+        
+        if (response.data) {
+          setEducation(prev => [...prev, newEducation]);
+          setNewEducation({ degree: '', school: '', year: '' });
+          setShowEduForm(false);
+        }
+      } catch (e) {
+        console.error('Failed to add education:', e);
+        alert('Failed to add education');
       }
+    } else {
+      alert('Please fill all the fields');
     }
   };
 
   const handleAddExperience = async () => {
     if (newExperience.title && newExperience.company && newExperience.from && newExperience.to) {
-      setExperience([...experience, newExperience]);
-      setNewExperience({ title: '', company: '', from: '', to: '' });
-      setShowExpForm(false);
-
-      const newExperience = {
-        title: newExperience.title,
-        company: newExperience.company,
-        from: newExperience.from,
-        to: newExperience.to,
-      };
-      const response = await axios.post(`http://localhost:3000/working/addExperience`, {
-        username: user.userName,
-        experience: newExperience,
-      }, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      });
-      if (response.data) {
-        console.log(response.data);
-      } else {
-        console.log('Experience not added');
+      try {
+        const response = await axios.post('http://localhost:3000/working/addExperience', {
+          username: user.userName,
+          experience: JSON.stringify(newExperience),
+        }, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        });
+        
+        if (response.data) {
+          setExperience(prev => [...prev, newExperience]);
+          setNewExperience({ title: '', company: '', from: '', to: '' });
+          setShowExpForm(false);
+        }
+      } catch (e) {
+        console.error('Failed to add experience:', e);
+        alert('Failed to add experience');
       }
+    } else {
+      alert('Please fill all the fields');
     }
   };
 
@@ -142,7 +162,7 @@ const Profile = () => {
           {showEduForm ? (
             <div className="bg-gray-100 p-4 rounded-lg">
               <input type="text" placeholder="Degree" value={newEducation.degree} onChange={(e) => setNewEducation({ ...newEducation, degree: e.target.value })} className="w-full mb-2 p-2 border rounded-lg" />
-              <input type="text" placeholder="School" value={newEducation.school} onChange={(e) => setNewEducation({ ...newEducation, school: e.target.value })} className="w-full mb-2 p-2 border rounded-lg" />
+              <input type="text" placeholder="School/University" value={newEducation.school} onChange={(e) => setNewEducation({ ...newEducation, school: e.target.value })} className="w-full mb-2 p-2 border rounded-lg" />
               <input type="text" placeholder="Year" value={newEducation.year} onChange={(e) => setNewEducation({ ...newEducation, year: e.target.value })} className="w-full mb-2 p-2 border rounded-lg" />
               <div className="flex justify-end space-x-2">
                 <button onClick={() => setShowEduForm(false)} className="bg-gray-400 text-white px-4 py-2 rounded-lg">Cancel</button>

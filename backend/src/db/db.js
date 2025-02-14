@@ -4,8 +4,8 @@ const userSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
-  experience: [String],
-  education: [String],
+  experience: [Object],
+  education: [Object],
 });
 
 const postSchema = new mongoose.Schema({

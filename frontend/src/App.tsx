@@ -6,6 +6,7 @@ import Jobs from './pages/Jobs';
 import Courses from './pages/Courses';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
+import LandingPage from './pages/LandingPage';
 import { useEffect } from 'react';
 import { RecoilRoot, useSetRecoilState } from 'recoil';
 import { userState } from './store/atoms/user';
@@ -21,7 +22,8 @@ function App() {
           <InitUser />
           <main className="container mx-auto px-4 py-8">
             <Routes>
-              <Route path="/" element={<Feed />} />
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/dashboard" element={<Feed />} />
               <Route path='/login' element={<Login />} />
               <Route path='/register' element={<Register />} />
               <Route path="/network" element={<Network />} />

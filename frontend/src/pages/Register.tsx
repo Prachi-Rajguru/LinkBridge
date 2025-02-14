@@ -28,7 +28,7 @@ function Register() {
                 isLoading: false,
                 userName: username,
             })
-            navigate('/');
+            navigate('/dashboard');
         }
 
 

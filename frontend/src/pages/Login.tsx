@@ -21,7 +21,7 @@ function Login() {
             password,
         });
 
-        if (res.status === 200) {
+        if (res.data) {
             console.log('Login successful');
             setUser({
                 userName: username,
