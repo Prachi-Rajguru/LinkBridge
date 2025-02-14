@@ -46,7 +46,7 @@ function InitUser() {
           Authorization: localStorage.getItem("token"),
         },
       });
-      if (response.data.username) {
+      if (response.data) {
         setUser({
           isLoading: false,
           userName: response.data.username,
