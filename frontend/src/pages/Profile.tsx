@@ -47,6 +47,7 @@ const Profile = () => {
         },
       });
       if (response.data) {
+        console.log(response.data);
         setEducation(response.data.userdata.education);
         setExperience(response.data.userdata.experience);
       }

@@ -130,7 +130,9 @@ function Register() {
 
             <div className="text-center text-sm">
                 <span className="text-gray-500">Already have an account?</span>{' '}
-                <button className="font-medium text-indigo-600 hover:text-indigo-500">
+                <button onClick={() => {
+                    navigate('/login');
+                }} className="font-medium text-indigo-600 hover:text-indigo-500">
                     Sign in
                 </button>
             </div>

@@ -63,7 +63,7 @@ router.post('/addEducation', middleware.VERIFYWITHJWT, async (req, res) => {
     }
 });
 
-router.post('/working/updateProfile', async (req, res) => {
+router.post('/updateProfile', async (req, res) => {
     try {
         const { username, name, position, city } = req.body;
         const updatedUser = await User.findOneAndUpdate(
