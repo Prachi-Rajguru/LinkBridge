@@ -180,32 +180,38 @@ const Profile = () => {
               </div>
             </div>
           </div>
+
           <div className="absolute right-6 bottom-6 flex space-x-2">
-          {!isEditing ? (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="bg-accent hover:bg-dark text-white px-4 py-2 rounded-lg flex items-center"
-            >
-              <FaEdit className="mr-2" />
-              Edit Profile
-            </button>
-          ) : (
-            <div className="flex space-x-2">
+            {!isEditing ? (
               <button
-                onClick={handleUpdateProfile}
-                className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+                onClick={() => setIsEditing(true)}
+                className="bg-accent hover:bg-dark text-white px-4 py-2 rounded-lg flex items-center"
               >
-                Save
+                <FaEdit className="mr-2" />
+                Edit Profile
               </button>
-              <button
-                onClick={() => setIsEditing(false)}
-                className="bg-gray-400 text-white px-4 py-2 rounded-lg"
-              >
-                Cancel
-              </button>
-            </div>
+            ) : (
+              <div className="flex space-x-2">
+                <button
+                  onClick={handleUpdateProfile}
+                  className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="bg-gray-400 text-white px-4 py-2 rounded-lg"
+                >
+                  Cancel
+                </button>
+              </div>
             )}
+            <button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+              Logout
+            </button>
           </div>
+
+
         </div>
 
         <div className="mt-8">
