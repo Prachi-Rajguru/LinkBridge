@@ -16,7 +16,7 @@ function Login() {
         // Handle login logic here
         console.log('Login attempted with:', { username, password });
 
-        const res = await axios.post(`https://linkbridge-apjk.onrender.com/auth/login`, {
+        const res = await axios.post(`http://localhost:3000/auth/login`, {
             username,
             password,
         });
@@ -61,7 +61,7 @@ function Login() {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="Enter your username"
+                            placeholder="Enter your name"
                             required
                         />
                     </div>

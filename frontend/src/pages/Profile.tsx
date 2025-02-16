@@ -41,7 +41,7 @@ const Profile = () => {
 
   const loadProfile = async () => {
     try {
-      const response = await axios.get<ProfileResponse>('https://linkbridge-apjk.onrender.com/working/getUser', {
+      const response = await axios.get<ProfileResponse>('http://localhost:3000/working/getUser', {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
@@ -59,10 +59,16 @@ const Profile = () => {
     loadProfile();
   }, []);
 
+  
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+  };
+
   const handleAddEducation = async () => {
     if (newEducation.degree && newEducation.school && newEducation.year) {
       try {
-        const response = await axios.post('https://linkbridge-apjk.onrender.com/working/addEducation', {
+        const response = await axios.post('http://localhost:3000/working/addEducation', {
           username: user.userName,
           education: JSON.stringify(newEducation),
         }, {
@@ -88,7 +94,7 @@ const Profile = () => {
   const handleAddExperience = async () => {
     if (newExperience.title && newExperience.company && newExperience.from && newExperience.to) {
       try {
-        const response = await axios.post('https://linkbridge-apjk.onrender.com/working/addExperience', {
+        const response = await axios.post('http://localhost:3000/working/addExperience', {
           username: user.userName,
           experience: JSON.stringify(newExperience),
         }, {
@@ -111,6 +117,49 @@ const Profile = () => {
     }
   };
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedProfile, setUpdatedProfile] = useState({
+    name: "",
+    position: "",
+    city: "",
+  });
+
+  useEffect(() => {
+    // Prefill form with current user data
+    setUpdatedProfile({
+      name: user?.name || "",
+      position: user?.position || "",
+      city: user?.city || "",
+    });
+  }, [user]);
+
+  const handleUpdateProfile = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/working/updateProfile",
+        {
+          username: user.userName,
+          name: updatedProfile.name,
+          position: updatedProfile.position,
+          city: updatedProfile.city,
+        },
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
+
+      if (response.data) {
+        alert("Profile updated successfully!");
+        setIsEditing(false);
+        loadProfile(); // Refresh profile data
+      }
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      alert("Failed to update profile");
+    }
+  };
+
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="bg-white rounded-lg shadow-md p-6">
@@ -131,19 +180,68 @@ const Profile = () => {
               </div>
             </div>
           </div>
-          <div className="absolute right-6 bottom-6">
-            <button className="bg-accent hover:bg-dark text-white px-4 py-2 rounded-lg flex items-center">
+          <div className="absolute right-6 bottom-6 flex space-x-2">
+          {!isEditing ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="bg-accent hover:bg-dark text-white px-4 py-2 rounded-lg flex items-center"
+            >
               <FaEdit className="mr-2" />
               Edit Profile
             </button>
+          ) : (
+            <div className="flex space-x-2">
+              <button
+                onClick={handleUpdateProfile}
+                className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setIsEditing(false)}
+                className="bg-gray-400 text-white px-4 py-2 rounded-lg"
+              >
+                Cancel
+              </button>
+            </div>
+            )}
           </div>
         </div>
 
         <div className="mt-8">
-          <h1 className="text-2xl font-bold text-gray-800">{user.userName}</h1>
-          <p className="text-gray-600">Senior Software Engineer</p>
-          <p className="text-accent">San Francisco, CA</p>
+          {isEditing ? (
+            <div className="space-y-2">
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={updatedProfile.name}
+                onChange={(e) => setUpdatedProfile({ ...updatedProfile, name: e.target.value })}
+                className="w-full p-2 border rounded-lg"
+              />
+              <input
+                type="text"
+                placeholder="Position"
+                value={updatedProfile.position}
+                onChange={(e) => setUpdatedProfile({ ...updatedProfile, position: e.target.value })}
+                className="w-full p-2 border rounded-lg"
+              />
+              <input
+                type="text"
+                placeholder="City"
+                value={updatedProfile.city}
+                onChange={(e) => setUpdatedProfile({ ...updatedProfile, city: e.target.value })}
+                className="w-full p-2 border rounded-lg"
+              />
+            </div>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold text-gray-800">{user.name || "Your Name"}</h1>
+              <p className="text-gray-600">{user.position || "Your Position"}</p>
+              <p className="text-accent">{user.city || "Your City"}</p>
+            </>
+          )}
         </div>
+
 
         <div className="border-t mt-6 pt-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center">

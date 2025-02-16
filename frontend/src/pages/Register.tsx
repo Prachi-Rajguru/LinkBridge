@@ -16,7 +16,7 @@ function Register() {
     const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault();
 
-        const response = await axios.post(`https://linkbridge-apjk.onrender.com/auth/register`, {
+        const response = await axios.post(`http://localhost:3000/auth/register`, {
             username: username,
             password: password,
             email: email,

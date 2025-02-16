@@ -7,6 +7,7 @@ const JWT_SECRET = 'Se3Cr3tK3y'
 
 const VERIFYWITHJWT = async (req, res, next) => {
     try {
+        console.log(req.headers.authorization)
         const token = req.headers.authorization.split(' ')[1]
         console.log(token)
         if (!token) {

@@ -63,5 +63,23 @@ router.post('/addEducation', middleware.VERIFYWITHJWT, async (req, res) => {
     }
 });
 
+router.post('/working/updateProfile', async (req, res) => {
+    try {
+        const { username, name, position, city } = req.body;
+        const updatedUser = await User.findOneAndUpdate(
+            { username },
+            { name, position, city },
+            { new: true }
+        );
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json({ message: 'Profile updated successfully', user: updatedUser });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating profile', error });
+    }
+});
+
+
 
 module.exports = router;
