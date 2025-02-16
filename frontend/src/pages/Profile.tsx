@@ -30,14 +30,22 @@ interface ProfileResponse {
   };
 }
 
+
 const Profile = () => {
-  const user = useRecoilValue<User>(userState);
+  const [user, setUser] = useState({});
   const [education, setEducation] = useState<Education[]>([]);
   const [experience, setExperience] = useState<Experience[]>([]);
   const [showEduForm, setShowEduForm] = useState(false);
   const [showExpForm, setShowExpForm] = useState(false);
   const [newEducation, setNewEducation] = useState<Education>({ degree: '', school: '', year: '' });
   const [newExperience, setNewExperience] = useState<Experience>({ title: '', company: '', from: '', to: '' });
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedProfile, setUpdatedProfile] = useState({
+    name: "",
+    position: "",
+    city: "",
+  });
 
   const loadProfile = async () => {
     try {
@@ -48,6 +56,7 @@ const Profile = () => {
       });
       if (response.data) {
         console.log(response.data);
+        setUser(response.data.userdata);
         setEducation(response.data.userdata.education);
         setExperience(response.data.userdata.experience);
       }
@@ -118,12 +127,7 @@ const Profile = () => {
     }
   };
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [updatedProfile, setUpdatedProfile] = useState({
-    name: "",
-    position: "",
-    city: "",
-  });
+  
 
   useEffect(() => {
     // Prefill form with current user data
@@ -136,10 +140,11 @@ const Profile = () => {
 
   const handleUpdateProfile = async () => {
     try {
+      console.log("User: ", user);
       const response = await axios.post(
         "http://localhost:3000/working/updateProfile",
         {
-          username: user.userName,
+          username: user.username,
           name: updatedProfile.name,
           position: updatedProfile.position,
           city: updatedProfile.city,

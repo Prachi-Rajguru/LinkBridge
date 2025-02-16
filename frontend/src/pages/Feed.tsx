@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { FaThumbsUp, FaComment, FaShare, FaImage } from 'react-icons/fa';
+import axios from 'axios';
+import { FaThumbsUp, FaComment, FaShare } from 'react-icons/fa';
 
 interface Post {
   id: number;
@@ -17,7 +18,7 @@ interface Post {
 }
 
 const Feed = () => {
-  const [posts] = useState<Post[]>([
+  const [posts, setPosts] = useState<Post[]>([
     {
       id: 1,
       author: {
@@ -31,32 +32,42 @@ const Feed = () => {
       likes: 42,
       comments: 8,
       timestamp: "2h ago"
-    },
-    {
-      id: 2,
-      author: {
-        name: "Jane Smith",
-        title: "Product Manager",
-        avatar: "JS",
-        profileImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"
-      },
-      content: "Looking for talented frontend developers to join our team. Great opportunity to work on cutting-edge projects! #Hiring #WebDevelopment",
-      likes: 28,
-      comments: 15,
-      timestamp: "4h ago"
     }
   ]);
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    setImagePreview(e.target.value);
+  };
+
+  const handlePost = async () => {
+    if (!title.trim() || !description.trim()) {
+      alert('Title and description are required.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:3000/post/create', {
+        title,
+        description,
+        image: imagePreview,
+        category,
+      });
+
+      if (response.data) {
+        setPosts((prevPosts) => [...prevPosts, response.data]);
+        setTitle('');
+        setDescription('');
+        setImagePreview(null);
+        setCategory('');
+      }
+    } catch (e) {
+      console.error('Failed to create post:', e);
+      alert('Failed to create post');
     }
   };
 
@@ -66,7 +77,7 @@ const Feed = () => {
       <div className="bg-white rounded-lg shadow-md p-4">
         <div className="flex items-center space-x-4 mb-4">
           <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center overflow-hidden">
-            {posts[0].author.profileImage ? (
+            {posts[0]?.author.profileImage ? (
               <img src={posts[0].author.profileImage} alt={posts[0].author.name} className="w-full h-full object-cover" />
             ) : (
               <span className="text-white font-bold">{posts[0].author.avatar}</span>
@@ -74,12 +85,20 @@ const Feed = () => {
           </div>
           <input
             type="text"
-            placeholder="Share your thoughts..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title..."
             className="flex-1 p-3 border rounded-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-accent"
           />
         </div>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="What's on your mind?"
+          className="w-full p-3 border rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-accent"
+        />
         {imagePreview && (
-          <div className="relative mb-4">
+          <div className="relative mb-4 mt-2">
             <img src={imagePreview} alt="Preview" className="w-full rounded-lg" />
             <button
               onClick={() => setImagePreview(null)}
@@ -89,13 +108,18 @@ const Feed = () => {
             </button>
           </div>
         )}
-        <div className="flex justify-between items-center border-t pt-4">
-          <label className="flex items-center space-x-2 text-gray-600 cursor-pointer hover:text-accent">
-            <FaImage />
-            <span>Add Image</span>
-            <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-          </label>
-          <button className="bg-accent hover:bg-dark text-white px-6 py-2 rounded-lg transition-colors">
+        <div className="flex justify-between items-center border-t pt-4 gap-4">
+          <input
+            type="text"
+            value={imagePreview || ''}
+            placeholder="Paste image URL..."
+            onChange={handleImageUpload}
+            className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-accent"
+          />
+          <button
+            onClick={handlePost}
+            className="bg-accent hover:bg-dark text-white px-6 py-2 rounded-lg transition-colors"
+          >
             Post
           </button>
         </div>
@@ -142,6 +166,6 @@ const Feed = () => {
       ))}
     </div>
   );
-}
+};
 
-export default Feed
+export default Feed;

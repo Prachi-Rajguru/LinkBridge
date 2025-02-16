@@ -14,7 +14,7 @@ app.use(cors())
 
 app.use('/auth', Auth.router)
 app.use('/working', Working)
-app.use('/post', Post.router)
+app.use('/post', Post)
 app.use("/jobs", Jobs); 
 
 mongoose.connect('mongodb://localhost:27017/', { dbName: "course_selling_application" });

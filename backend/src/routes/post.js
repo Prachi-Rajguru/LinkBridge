@@ -95,4 +95,4 @@ router.delete("/:id", VERIFYWITHJWT, async (req, res) => {
     }
 });
 
-module.exports = { router };
+module.exports = router;
